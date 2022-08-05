@@ -12,8 +12,9 @@ public class ThirdPersonMovement : MonoBehaviour
     
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
-    private Vector3 velocity;
-    private bool isGrounded;
+    public Vector3 velocity;
+    public bool isGrounded;
+    public bool controllerGrounded;
     // equation to calculate jump height
     // v = sqrt(h * -2 * g)
     //h-height g-gravity
@@ -41,9 +42,9 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void executeJump(InputAction.CallbackContext context) {
         Debug.Log(context.ReadValue<float>());
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        controllerGrounded = controller.isGrounded;
 
-        if(isGrounded) {
+        if(controllerGrounded) {
             velocity.y = Mathf.Sqrt(jumpHeight*-2f*gravity);
         }
         
@@ -52,10 +53,11 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        controllerGrounded = controller.isGrounded;
+        // isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         //making sure gravity doesn't keep counting once we touched the ground
-        if (isGrounded && velocity.y < 0) {
+        if (controllerGrounded && velocity.y < 0) {
             velocity.y = -2f;
         }
 
